@@ -1,21 +1,49 @@
-﻿// PrimeCPlusPluser.cpp : Ten plik zawiera funkcję „main”. W nim rozpoczyna się i kończy wykonywanie programu.
-//
+﻿#include "pch.h"
 
-#include "pch.h"
+#define _CRT_SECURE_NO_WARNINGS
+
+#include <ctime>
 #include <iostream>
+#include <vector>
 
-int main()
-{
-    std::cout << "Hello World!\n"; 
+int main() {
+  std::vector<__int64> found_primes({ 1, 2 });
+  __int64 current_value = 3;
+  time_t last_tstamp = time(nullptr);
+
+  while (found_primes.size() < 10000000) {
+    bool found_divider = false;
+    char fmt_time[100];
+
+    for (auto divider : found_primes) {
+
+      if (divider == 1) continue;
+
+      if (divider * divider > current_value) break;
+
+      if (current_value % divider == 0) {
+        found_divider = true;
+        break;
+      }
+
+    }
+
+    if (!found_divider) {
+      found_primes.push_back(current_value);
+
+      if (found_primes.size() % 1000000 == 0) {
+        time_t now_tstamp = time(nullptr);
+        strftime(fmt_time, 99, "%F %T", localtime(&now_tstamp));
+        std::cout
+          << fmt_time << " - time: " << (now_tstamp - last_tstamp) << " s - "
+          << found_primes.size() << " : " << current_value << '\n';
+        last_tstamp = now_tstamp;
+      }
+
+    }
+
+    current_value += 2;
+  }
+
+  return 0;
 }
-
-// Uruchomienie programu: Ctrl + F5 lub menu Debugowanie > Uruchom bez debugowania
-// Debugowanie programu: F5 lub menu Debugowanie > Rozpocznij debugowanie
-
-// Porady dotyczące rozpoczynania pracy:
-//   1. Użyj okna Eksploratora rozwiązań, aby dodać pliki i zarządzać nimi
-//   2. Użyj okna programu Team Explorer, aby nawiązać połączenie z kontrolą źródła
-//   3. Użyj okna Dane wyjściowe, aby sprawdzić dane wyjściowe kompilacji i inne komunikaty
-//   4. Użyj okna Lista błędów, aby zobaczyć błędy
-//   5. Wybierz pozycję Projekt > Dodaj nowy element, aby utworzyć nowe pliki kodu, lub wybierz pozycję Projekt > Dodaj istniejący element, aby dodać istniejące pliku kodu do projektu
-//   6. Aby w przyszłości ponownie otworzyć ten projekt, przejdź do pozycji Plik > Otwórz > Projekt i wybierz plik sln
